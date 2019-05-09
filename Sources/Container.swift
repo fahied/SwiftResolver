@@ -11,6 +11,7 @@ final public class Container {
     public typealias Builder3<T, A, B, C> = ((A, B, C)) -> T
     public typealias Builder4<T, A, B, C, D> = ((A, B, C, D)) -> T
     public typealias Builder5<T, A, B, C, D, E> = ((A, B, C, D, E)) -> T
+    public typealias Builder6<T, A, B, C, D, E, F> = ((A, B, C, D, E, F)) -> T
     
     private let pool = DependencyPool()
     
@@ -66,6 +67,19 @@ final public class Container {
     public func register<T, A, B, C, D, E>(scope: Scope = .instance, _ builder: @escaping Builder5<T, A, B, C, D, E>) -> TypeSpecifier {
         let factory = Factory<T>(scope: scope) { [unowned self] in
             return try builder((self.pool.instance(),
+                                self.pool.instance(),
+                                self.pool.instance(),
+                                self.pool.instance(),
+                                self.pool.instance()))
+        }
+        return self.pool.register(factory)
+    }
+    
+    @discardableResult
+    public func register<T, A, B, C, D, E, F>(scope: Scope = .instance, _ builder: @escaping Builder6<T, A, B, C, D, E, F>) -> TypeSpecifier {
+        let factory = Factory<T>(scope: scope) { [unowned self] in
+            return try builder((self.pool.instance(),
+                                self.pool.instance(),
                                 self.pool.instance(),
                                 self.pool.instance(),
                                 self.pool.instance(),
